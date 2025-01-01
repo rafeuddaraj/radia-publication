@@ -5,17 +5,27 @@ export const {
   auth,
   handlers: { GET, POST },
 } = NextAuth({
-    session:{
-        strategy:"jwt"
-    },
-  providers: [CredentialProvider({
-    credentials:{
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    CredentialProvider({
+      credentials: {
         email: { label: "Email", type: "email" },
-        password: {  label: "Password", type: "password" }
-    },
-    async authorize(credentials){
-        const {email,password} = credentials
-        return await {user: {email,password}}
-    }
-  }), GoogleProvider({})],
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials as {
+          email: string;
+          password: string;
+        };
+        await new Promise((resolve) => {
+          // Simulate async operation
+          setTimeout(() => resolve(true), 1000);
+        });
+        return { email, password }; // Ensure the returned object matches the User type
+      },
+    }),
+    GoogleProvider({}),
+  ],
 });
