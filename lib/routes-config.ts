@@ -9,46 +9,230 @@ export type EachRoute = {
 
 export const ROUTES: EachRoute[] = [
   {
-    title: "Getting Started",
-    href: "/getting-started",
+    title: "Get Started",
+    href: "/get-started",
+  },
+  {
+    title: "Computer Science and Technology - 85",
+    href: "/85-cst",
     noLink: true,
     items: [
-      { title: "Introduction", href: "/introduction" },
       {
-        title: "Installation",
-        href: "/installation",
-      },
-      { title: "Quick Start Guide", href: "/quick-start-guide" },
-      {
-        title: "Project Structure",
-        href: "/project-structure",
+        title: "First Semester",
+        href: "/1st",
+        // noLink: true,
+        items: [{ title: "Bangla-1 (25711)", href: "/Bangla-I(25711)" }],
       },
       {
-        title: "Components",
-        href: "/components",
+        title: "Second Semester",
+        href: "/2nd",
         items: [
-          { title: "Stepper", href: "/stepper" },
-          { title: "Tabs", href: "/tabs" },
-          { title: "Note", href: "/note" },
-          { title: "Code Block", href: "/code-block" },
-          { title: "Image & Link", href: "/image-link" },
-          { title: "Custom", href: "/custom" },
+          {
+            title: "Python Programming (28521)",
+            href: "/28521-python-programming",
+            items: [
+              {
+                title: "অধ্যায় ১ বেসিক অফ প্রোগ্রামিং (BASIC OF PROGRAMMING)",
+                href: "/chapter-1",
+              },
+            ],
+          },
         ],
       },
-      { title: "Themes", href: "/themes" },
       {
-        title: "Customize",
-        href: "/customize",
+        title: "Third Semester",
+        href: "/3rd",
+        // noLink: true,
+      },
+      {
+        title: "Fourth Semester",
+        href: "/4th",
+        // noLink: true,
+      },
+      {
+        title: "Fifth Semester",
+        href: "/5th",
+        // noLink: true,
+      },
+      {
+        title: "Sixth Semester",
+        href: "/6th",
+        // noLink: true,
+      },
+      {
+        title: "Seventh Semester",
+        href: "/7th",
+        // noLink: true,
       },
     ],
   },
   {
-    title: "বাংলা-১ (Bangla-1)",
-    href: "/bangla-1",
+    title: "Civil Technology - 64",
+    href: "/64-ct",
     noLink: true,
-    items:[
-      {title:"আঠারো বছর বয়স", href:"/kobita"},
-    ]
+    items: [
+      {
+        title: "First Semester",
+        href: "/1st",
+        // noLink: true,
+      },
+      {
+        title: "Second Semester",
+        href: "/2nd",
+        // noLink: true,
+      },
+      {
+        title: "Third Semester",
+        href: "/3rd",
+        // noLink: true,
+      },
+      {
+        title: "Fourth Semester",
+        href: "/4th",
+        // noLink: true,
+      },
+      {
+        title: "Fifth Semester",
+        href: "/5th",
+        // noLink: true,
+      },
+      {
+        title: "Sixth Semester",
+        href: "/6th",
+        // noLink: true,
+      },
+      {
+        title: "Seventh Semester",
+        href: "/7th",
+        // noLink: true,
+      },
+    ],
+  },
+  {
+    title: "Electrical Technology - 67",
+    href: "/67-et",
+    noLink: true,
+    items: [
+      {
+        title: "First Semester",
+        href: "/1st",
+        // noLink: true,
+      },
+      {
+        title: "Second Semester",
+        href: "/2nd",
+        // noLink: true,
+      },
+      {
+        title: "Third Semester",
+        href: "/3rd",
+        // noLink: true,
+      },
+      {
+        title: "Fourth Semester",
+        href: "/4th",
+        // noLink: true,
+      },
+      {
+        title: "Fifth Semester",
+        href: "/5th",
+        // noLink: true,
+      },
+      {
+        title: "Sixth Semester",
+        href: "/6th",
+        // noLink: true,
+      },
+      {
+        title: "Seventh Semester",
+        href: "/7th",
+        // noLink: true,
+      },
+    ],
+  },
+  {
+    title: "Mechanical Technology - 70",
+    href: "/70-mt",
+    noLink: true,
+    items: [
+      {
+        title: "First Semester",
+        href: "/1st",
+        // noLink: true,
+      },
+      {
+        title: "Second Semester",
+        href: "/2nd",
+        // noLink: true,
+      },
+      {
+        title: "Third Semester",
+        href: "/3rd",
+        // noLink: true,
+      },
+      {
+        title: "Fourth Semester",
+        href: "/4th",
+        // noLink: true,
+      },
+      {
+        title: "Fifth Semester",
+        href: "/5th",
+        // noLink: true,
+      },
+      {
+        title: "Sixth Semester",
+        href: "/6th",
+        // noLink: true,
+      },
+      {
+        title: "Seventh Semester",
+        href: "/7th",
+        // noLink: true,
+      },
+    ],
+  },
+  {
+    title: "Electronics Technology - 68",
+    href: "/68-elt",
+    noLink: true,
+    items: [
+      {
+        title: "First Semester",
+        href: "/1st",
+        // noLink: true,
+      },
+      {
+        title: "Second Semester",
+        href: "/2nd",
+        // noLink: true,
+      },
+      {
+        title: "Third Semester",
+        href: "/3rd",
+        // noLink: true,
+      },
+      {
+        title: "Fourth Semester",
+        href: "/4th",
+        // noLink: true,
+      },
+      {
+        title: "Fifth Semester",
+        href: "/5th",
+        // noLink: true,
+      },
+      {
+        title: "Sixth Semester",
+        href: "/6th",
+        // noLink: true,
+      },
+      {
+        title: "Seventh Semester",
+        href: "/7th",
+        // noLink: true,
+      },
+    ],
   },
 ];
 
