@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 8101",
+    "push": "git add . && git commit -m \"book added\" && git push",
+    "pull": "git pull",
     "start-prod": "npm run build && npm run start",
     "lint": "next lint"
   },
