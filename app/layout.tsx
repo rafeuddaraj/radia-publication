@@ -4,7 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { Space_Mono, Space_Grotesk } from "next/font/google";
 import { Footer } from "@/components/footer";
 import "@/styles/globals.css";
-
+import { Toaster } from "sonner";
 const sansFont = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-geist-sans",
@@ -45,6 +45,7 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="sm:container mx-auto w-[90vw] h-auto scroll-smooth">
+            <Toaster expand={true} position="bottom-right" duration={2000} />
             {children}
           </main>
           <Footer />
