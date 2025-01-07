@@ -63,9 +63,9 @@ export type BaseMdxFrontmatter = {
   description: string;
 };
 
-export async function getDocsForSlug(slug: string) {
+export async function getBooksForSlug(slug: string) {
   try {
-    const contentPath = getDocsContentPath(slug);
+    const contentPath = getBooksContentPath(slug);
     const rawMdx = await fs.readFile(contentPath, "utf-8");
     return await parseMdx<BaseMdxFrontmatter>(rawMdx);
   } catch (err) {
@@ -73,8 +73,8 @@ export async function getDocsForSlug(slug: string) {
   }
 }
 
-export async function getDocsTocs(slug: string) {
-  const contentPath = getDocsContentPath(slug);
+export async function getBooksTocs(slug: string) {
+  const contentPath = getBooksContentPath(slug);
   const rawMdx = await fs.readFile(contentPath, "utf-8");
   // captures between ## - #### can modify accordingly
   const headingsRegex = /^(#{2,4})\s(.+)$/gm;
@@ -106,8 +106,8 @@ function sluggify(text: string) {
   return slug.replace(/[^a-z0-9-]/g, "");
 }
 
-function getDocsContentPath(slug: string) {
-  return path.join(process.cwd(), "/contents/docs/", `${slug}/index.mdx`);
+function getBooksContentPath(slug: string) {
+  return path.join(process.cwd(), "/contents/books/", `${slug}/index.mdx`);
 }
 
 function justGetFrontmatterFromMD<Frontmatter>(rawMd: string): Frontmatter {
@@ -131,17 +131,17 @@ export async function getAllChilds(pathString: string) {
     page_routes_copy.map(async (it) => {
       const totalPath = path.join(
         process.cwd(),
-        "/contents/docs/",
+        "/contents/books/",
         prevHref,
         it.href,
-        "index.mdx",
+        "index.mdx"
       );
       const raw = await fs.readFile(totalPath, "utf-8");
       return {
         ...justGetFrontmatterFromMD<BaseMdxFrontmatter>(raw),
-        href: `/docs${prevHref}${it.href}`,
+        href: `/books${prevHref}${it.href}`,
       };
-    }),
+    })
   );
 }
 
@@ -200,7 +200,7 @@ export async function getAllBlogs() {
         ...justGetFrontmatterFromMD<BlogMdxFrontmatter>(rawMdx),
         slug: file.split(".")[0],
       };
-    }),
+    })
   );
   return uncheckedRes.filter((it) => !!it) as (BlogMdxFrontmatter & {
     slug: string;

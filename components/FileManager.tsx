@@ -56,24 +56,26 @@ export function FileManager({ pathname = "" }: { pathname?: string }) {
   };
 
   const handleNavigate = (name: string) => {
-    if (pathname !== "/contents")
-     {
+    if (pathname !== "/contents") {
       setCurrentPath(
         (prevPath) => `${prevPath === "/" ? "" : prevPath}/${name}`
       );
-      router.push(`/admin/books/file-manager/${currentPath === "" ? "" : currentPath}/${name}`)
-     }
-    else {
-      router.push(`/admin/books/file-manager/contents/${name}`);
+      router.push(
+        `/dashboard/books/file-manager/${
+          currentPath === "" ? "" : currentPath
+        }/${name}`
+      );
+    } else {
+      router.push(`/dashboard/books/file-manager/contents/${name}`);
     }
   };
 
   const handleBack = () => {
     const parts = currentPath.split("/");
     parts.pop();
-    const newPath =  parts.join("/") || "/contents";
+    const newPath = parts.join("/") || "/contents";
     setCurrentPath(newPath);
-    router.push(`/admin/books/file-manager/${newPath}`)
+    router.push(`/dashboard/books/file-manager/${newPath}`);
   };
 
   const handleDeleteClick = (name: string) => {
@@ -91,7 +93,7 @@ export function FileManager({ pathname = "" }: { pathname?: string }) {
 
   const handleFileClick = async (name: string) => {
     const filePath = `${currentPath}/${name}`;
-    router.push(`/admin/books/file-manager/edit?id=/${filePath}`);
+    router.push(`/dashboard/books/file-manager/edit?id=/${filePath}`);
   };
 
   const router = useRouter();
@@ -113,14 +115,14 @@ export function FileManager({ pathname = "" }: { pathname?: string }) {
         disabled
         className="mb-4"
       />
-     <div className="flex gap-5">
-     <Button onClick={handleBack} className="mb-4">
-        Back
-      </Button>
-      <Button onClick={()=>router.back()} className="mb-4">
-        Prev
-      </Button>
-     </div>
+      <div className="flex gap-5">
+        <Button onClick={handleBack} className="mb-4">
+          Back
+        </Button>
+        <Button onClick={() => router.back()} className="mb-4">
+          Prev
+        </Button>
+      </div>
       <FileList
         files={files}
         isGridView={isGridView}

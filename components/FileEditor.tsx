@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Suspense, useCallback, useEffect } from "react";
-import EditorComponent from "@/app/(admin)/admin/books/_components/EditorComponent";
+import EditorComponent from "@/app/(dashboard)/dashboard/books/_components/EditorComponent";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 

@@ -6,7 +6,7 @@ export default function Home() {
       <div className="grid grid-cols-3 gap-x-10">
         <div className="border border-green-400 rounded-md hover:scale-105 duration-100">
           <Link
-            href="/admin/books/file-manager"
+            href="/dashboard/books/file-manager"
             className="py-10 px-4 block text-center"
           >
             Book Manager
@@ -14,14 +14,17 @@ export default function Home() {
         </div>
         <div className="border border-green-400 rounded-md hover:scale-105 duration-100">
           <Link
-            href="/admin/student-manager"
+            href="/dashboard/student-manager"
             className="py-10 px-4 block text-center"
           >
             Student Manager
           </Link>
         </div>
         <div className="border border-green-400 rounded-md hover:scale-105 duration-100">
-          <Link href="/admin/updates" className="py-10 px-4 block text-center">
+          <Link
+            href="/dashboard/updates"
+            className="py-10 px-4 block text-center"
+          >
             Updates
           </Link>
         </div>
