@@ -35,6 +35,42 @@ export const ROUTES: EachRoute[] = [
                 title: "অধ্যায় ১ বেসিক অফ প্রোগ্রামিং (BASIC OF PROGRAMMING)",
                 href: "/chapter-1",
               },
+              {
+                title: "অধ্যায় ২: পাইথনের বেসিকস (BASICS OF PYTHON)",
+                href: "/chapter-2",
+              },
+              {
+                title: "অধ্যায় ৩: ভেরিয়েবলস এবং ডাটা টাইপস",
+                href: "/chapter-3",
+              },
+              {
+                title: "অধ্যায় ৪:",
+                href: "/chapter-4",
+              },
+              {
+                title: "অধ্যায় ৫:",
+                href: "/chapter-5",
+              },
+              {
+                title: "অধ্যায় ৬:",
+                href: "/chapter-6",
+              },
+              {
+                title: "অধ্যায় ৭:",
+                href: "/chapter-7",
+              },
+              {
+                title: "অধ্যায় ৮:",
+                href: "/chapter-8",
+              },
+              {
+                title: "অধ্যায় ৯:",
+                href: "/chapter-9",
+              },
+              {
+                title: "অধ্যায় ১০:",
+                href: "/chapter-10",
+              },
             ],
           },
         ],
