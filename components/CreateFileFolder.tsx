@@ -26,11 +26,13 @@ export function CreateFileFolder({
   const [isDirectory, setIsDirectory] = useState(false);
 
   const handleCreate = useCallback(() => {
-    if (name) {
-      onCreate(name, isDirectory);
-      setName("");
-      setIsDirectory(false);
-    }
+    (async () => {
+      if (name) {
+        await onCreate(name, isDirectory);
+        setName("");
+        setIsDirectory(false);
+      }
+    })();
   }, [isDirectory, name, onCreate]);
 
   useEffect(() => {
