@@ -23,14 +23,14 @@ export function FileItem({
   onFileClick,
 }: FileItemProps) {
   return (
-    <Card className={`${isGridView ? "p-4" : "p-2"}`}>
+    <Card
+      onClick={() =>
+        file.isDirectory ? onNavigate(file.name) : onFileClick(file.name)
+      }
+      className={`${isGridView ? "p-4" : "p-2"} cursor-pointer`}
+    >
       <CardContent className="flex items-center justify-between">
-        <div
-          className={`flex items-center gap-2 cursor-pointer`}
-          onClick={() =>
-            file.isDirectory ? onNavigate(file.name) : onFileClick(file.name)
-          }
-        >
+        <div className={`flex items-center gap-2`}>
           {file.isDirectory ? <Folder /> : <File />}
           <span>{file.name}</span>
         </div>
@@ -43,7 +43,10 @@ export function FileItem({
         <Button
           variant="destructive"
           size="icon"
-          onClick={() => onDelete(file.name)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(file.name);
+          }}
         >
           <Trash2 className="h-4 w-4" />
         </Button>

@@ -22,7 +22,7 @@ export function CreateFileFolder({
   onClose,
   onCreate,
 }: CreateFileFolderProps) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState("index.mdx");
   const [isDirectory, setIsDirectory] = useState(false);
 
   const handleCreate = useCallback(() => {
