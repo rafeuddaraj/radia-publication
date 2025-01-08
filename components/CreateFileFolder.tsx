@@ -1,33 +1,56 @@
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 type CreateFileFolderProps = {
-  isOpen: boolean
-  onClose: () => void
-  onCreate: (name: string, isDirectory: boolean) => void
-}
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate: (name: string, isDirectory: boolean) => void;
+};
 
-export function CreateFileFolder({ isOpen, onClose, onCreate }: CreateFileFolderProps) {
-  const [name, setName] = useState('')
-  const [isDirectory, setIsDirectory] = useState(false)
+export function CreateFileFolder({
+  isOpen,
+  onClose,
+  onCreate,
+}: CreateFileFolderProps) {
+  const [name, setName] = useState("");
+  const [isDirectory, setIsDirectory] = useState(false);
 
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     if (name) {
-      onCreate(name, isDirectory)
-      setName('')
-      setIsDirectory(false)
+      onCreate(name, isDirectory);
+      setName("");
+      setIsDirectory(false);
     }
-  }
+  }, [isDirectory, name, onCreate]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        if (name.trim()) {
+          handleCreate();
+        }
+      }
+    };
+
+    if (window) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      if (window) {
+        window.removeEventListener("keydown", handleKeyDown);
+      }
+    };
+  }, [handleCreate, name]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -47,7 +70,10 @@ export function CreateFileFolder({ isOpen, onClose, onCreate }: CreateFileFolder
               className="col-span-3"
             />
           </div>
-          <RadioGroup defaultValue="file" onValueChange={(value) => setIsDirectory(value === 'folder')}>
+          <RadioGroup
+            defaultValue="file"
+            onValueChange={(value) => setIsDirectory(value === "folder")}
+          >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="file" id="file" />
               <Label htmlFor="file">File</Label>
@@ -63,6 +89,5 @@ export function CreateFileFolder({ isOpen, onClose, onCreate }: CreateFileFolder
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-
