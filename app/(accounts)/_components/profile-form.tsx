@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { motion } from 'framer-motion'
-import { toast } from 'sonner'
-import { Loader2, Upload } from 'lucide-react'
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { Loader2, Upload } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,15 +17,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
-  fullName: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Invalid phone number'),
+  fullName: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(10, "Invalid phone number"),
   dateOfBirth: z.string(),
   gender: z.string(),
   session: z.string(),
@@ -34,45 +40,46 @@ const formSchema = z.object({
   registrationNumber: z.string(),
   department: z.string(),
   instituteName: z.string(),
-  address: z.string().min(5, 'Please enter your full address'),
-  discordId: z.string().min(2, 'Invalid Discord ID'),
-  avatar: z.instanceof(File).optional(),
-})
+  address: z.string().min(5, "Please enter your full address"),
+  discordId: z.string().min(2, "Invalid Discord ID"),
+  avatar: z.any().optional(),
+  // avatar: z.instanceof(File).optional(),
+});
 
 export function ProfileForm() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: '',
-      email: '',
-      phone: '',
-      dateOfBirth: '',
-      gender: '',
-      session: '',
-      semester: '',
-      role: '',
-      registrationNumber: '',
-      department: '',
-      instituteName: '',
-      address: '',
-      discordId: '',
+      fullName: "",
+      email: "",
+      phone: "",
+      dateOfBirth: "",
+      gender: "",
+      session: "",
+      semester: "",
+      role: "",
+      registrationNumber: "",
+      department: "",
+      instituteName: "",
+      address: "",
+      discordId: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      console.log(values)
-      toast.success('Profile updated successfully!')
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(values);
+      toast.success("Profile updated successfully!");
     } catch {
-      toast.error('Something went wrong')
+      toast.error("Something went wrong");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -94,9 +101,9 @@ export function ProfileForm() {
                 <FormControl>
                   <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                     <Avatar className="h-24 w-24">
-                      <AvatarImage src={avatarPreview || '/placeholder.svg'} />
+                      <AvatarImage src={avatarPreview || "/placeholder.svg"} />
                       <AvatarFallback>
-                        {form.getValues('fullName')?.charAt(0) || 'U'}
+                        {form.getValues("fullName")?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -106,14 +113,14 @@ export function ProfileForm() {
                         className="hidden"
                         id="avatar"
                         onChange={(e) => {
-                          const file = e.target.files?.[0]
+                          const file = e.target.files?.[0];
                           if (file) {
-                            onChange(file)
-                            const reader = new FileReader()
+                            onChange(file);
+                            const reader = new FileReader();
                             reader.onloadend = () => {
-                              setAvatarPreview(reader.result as string)
-                            }
-                            reader.readAsDataURL(file)
+                              setAvatarPreview(reader.result as string);
+                            };
+                            reader.readAsDataURL(file);
                           }
                         }}
                       />
@@ -195,7 +202,10 @@ export function ProfileForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select your gender" />
@@ -261,7 +271,10 @@ export function ProfileForm() {
                 <FormItem>
                   <FormLabel>Registration Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your registration number" {...field} />
+                    <Input
+                      placeholder="Enter your registration number"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -329,7 +342,11 @@ export function ProfileForm() {
           </div>
 
           <div className="flex justify-end">
-            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full sm:w-auto"
+            >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Save Changes
             </Button>
@@ -337,6 +354,5 @@ export function ProfileForm() {
         </form>
       </Form>
     </motion.div>
-  )
+  );
 }
-
