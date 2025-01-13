@@ -69,7 +69,7 @@ export function ProfileForm() {
       await new Promise(resolve => setTimeout(resolve, 2000))
       console.log(values)
       toast.success('Profile updated successfully!')
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong')
     } finally {
       setIsLoading(false)
@@ -88,7 +88,7 @@ export function ProfileForm() {
           <FormField
             control={form.control}
             name="avatar"
-            render={({ field: { onChange, value, ...field } }) => (
+            render={({ field: { onChange } }) => (
               <FormItem>
                 <FormLabel>Profile Picture</FormLabel>
                 <FormControl>
@@ -116,7 +116,6 @@ export function ProfileForm() {
                             reader.readAsDataURL(file)
                           }
                         }}
-                        {...field}
                       />
                       <label
                         htmlFor="avatar"

@@ -1,33 +1,41 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Book } from 'lucide-react'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Book } from "lucide-react";
 
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 // Sample data
 const books = [
   {
-    id: '1',
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-    cover: '/placeholder.svg',
-    description: 'A novel about the Jazz Age in the United States.',
+    id: "1",
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "/placeholder.svg",
+    description: "A novel about the Jazz Age in the United States.",
   },
   // Add more sample books here
-]
+];
 
 export function BookGrid() {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState("");
 
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       book.author.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
   return (
     <div className="space-y-6">
@@ -48,7 +56,9 @@ export function BookGrid() {
             <Card className="h-full flex flex-col">
               <CardHeader className="p-0">
                 <div className="aspect-w-3 aspect-h-2">
-                  <img
+                  <Image
+                    height={300}
+                    width={300}
                     src={book.cover}
                     alt={book.title}
                     className="object-cover w-full h-full rounded-t-lg"
@@ -58,7 +68,9 @@ export function BookGrid() {
               <CardContent className="flex-grow p-4">
                 <CardTitle className="text-lg">{book.title}</CardTitle>
                 <CardDescription>{book.author}</CardDescription>
-                <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{book.description}</p>
+                <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
+                  {book.description}
+                </p>
               </CardContent>
               <CardFooter className="p-4 pt-0">
                 <Button className="w-full">
@@ -71,6 +83,5 @@ export function BookGrid() {
         ))}
       </div>
     </div>
-  )
+  );
 }
-

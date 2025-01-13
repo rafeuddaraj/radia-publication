@@ -48,7 +48,7 @@ export function PasswordChangeForm() {
       console.log(values)
       toast.success('Password changed successfully!')
       form.reset()
-    } catch (error) {
+    } catch {
       toast.error('Something went wrong')
     } finally {
       setIsLoading(false)
