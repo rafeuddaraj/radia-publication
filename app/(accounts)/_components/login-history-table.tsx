@@ -26,7 +26,7 @@ const loginHistory = [
 ]
 
 export function LoginHistoryTable() {
-  const [sortColumn, setSortColumn] = useState('')
+  const [sortColumn, setSortColumn] = useState<keyof typeof loginHistory[0] | ''>('')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -44,7 +44,7 @@ export function LoginHistoryTable() {
       entry.ipAddress.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const handleSort = (column: string) => {
+  const handleSort = (column: keyof typeof loginHistory[0]) => {
     if (column === sortColumn) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
     } else {
