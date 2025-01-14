@@ -67,7 +67,7 @@ export function Navbar() {
                 <TwitterIcon className="h-[1.1rem] w-[1.1rem]" />
               </Link>
               <Link
-                href="/account"
+                href="/login"
                 className={buttonVariants({
                   variant: "ghost",
                   size: "icon",
