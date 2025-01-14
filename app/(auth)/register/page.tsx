@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Eye, EyeOff, Loader2, KeyRound } from "lucide-react";
+import { Eye, EyeOff, Loader2, UserPlus2Icon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import CustomLabel from "@/components/ui/custom-label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -27,16 +26,26 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import Highlight from "@/components/highlight";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   name: z.string().min(4, "Name need"),
   gender: z.enum(["male", "female"]),
+  session: z.string().min(4),
+  roll: z.number(),
+  institute: z.string(),
+  discordUsername: z.string().optional(),
+  confirmPassword: z.string(),
+  phone: z.string(),
+  department: z.enum(["64-ct", "67-et", "68-elt", "70-mt", "85-cst"]),
+  address: z.string(),
+  registration: z.string().optional(),
 });
 
 export default function RegisterPage() {
@@ -70,7 +79,7 @@ export default function RegisterPage() {
         >
           <div className="mb-8 mx-auto text-center">
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r bg-clip-text">
-              নিবন্ধন করুন
+              <Highlight>নিবন্ধন </Highlight> করুন
             </h1>
             <p className="my-5 text-lg font-bold">
               একাউন্ট খোলার জন্য সঠিক তথ্য প্রদান করুন। এই তথ্য গুলো পরবর্তীতে
@@ -84,7 +93,6 @@ export default function RegisterPage() {
               <div className="flex gap-10">
                 <div className="w-1/2 space-y-6">
                   <FormField
-                    control={form.control}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
@@ -110,7 +118,6 @@ export default function RegisterPage() {
 
                   {/* Gender Field */}
                   <FormField
-                    control={form.control}
                     name="gender"
                     render={({ field }) => (
                       <FormItem>
@@ -143,7 +150,6 @@ export default function RegisterPage() {
 
                   {/* Email Field */}
                   <FormField
-                    control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
@@ -167,61 +173,46 @@ export default function RegisterPage() {
                     )}
                   />
 
-                  {/* Department */}
-                  <FormField
-                    control={form.control}
-                    name="department"
-                    render={({ field }) => (
-                      <FormItem>
-                        <CustomLabel
-                          label="ডিপার্টমেন্ট "
-                          subLabel="অনুগ্রহ করে আপনার ডিপার্টমেন্ট সঠিকভাবে উল্লেখ করুন, কারণ এটি গুরুত্বপূর্ণ তথ্য হিসেবে ব্যবহৃত হবে।"
-                          isRequired={true}
-                          htmlFor="departnemnt"
-                        />
-                        <FormControl>
-                          <Select>
-                            <SelectTrigger>
-                              <SelectValue placeholder="ডিপার্টমেন্ট সিলেক্ট করুন" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>Fruits</SelectLabel>
-                                <SelectItem value="apple">CST-85</SelectItem>
-                                <SelectItem value="banana">Banana</SelectItem>
-                                <SelectItem value="blueberry">
-                                  Blueberry
-                                </SelectItem>
-                                <SelectItem value="grapes">Grapes</SelectItem>
-                                <SelectItem value="pineapple">
-                                  Pineapple
-                                </SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   {/* Roll */}
                   <FormField
-                    control={form.control}
                     name="roll"
                     render={({ field }) => (
                       <FormItem>
                         <CustomLabel
                           label="বোর্ড রোল"
                           subLabel="অনুগ্রহ করে সঠিক বোর্ড রোল নম্বর প্রদান করুন।"
-                          htmlFor="email"
+                          htmlFor="roll"
                           isRequired={true}
                         />
                         <FormControl>
                           <div className="relative">
                             <Input
-                              id="email"
+                              id="roll"
                               placeholder="244139"
+                              {...field}
+                              type="number"
+                            />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+                  {/* Registration No */}
+                  <FormField
+                    name="registration"
+                    render={({ field }) => (
+                      <FormItem>
+                        <CustomLabel
+                          label="রেজিস্ট্রেশন নাম্বার"
+                          subLabel="অনুগ্রহ করে সঠিক রেজিস্ট্রেশন নম্বর প্রদান করুন।"
+                          htmlFor="registration"
+                        />
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              id="registration"
+                              placeholder="002441139"
                               {...field}
                               type="number"
                             />
@@ -234,7 +225,6 @@ export default function RegisterPage() {
 
                   {/* Password Field */}
                   <FormField
-                    control={form.control}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
@@ -274,7 +264,6 @@ export default function RegisterPage() {
                   {/* Confirm Password */}
 
                   <FormField
-                    control={form.control}
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
@@ -315,7 +304,6 @@ export default function RegisterPage() {
                 <div className="w-1/2 space-y-6">
                   {/* Mobile Number / Phone Number */}
                   <FormField
-                    control={form.control}
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
@@ -340,7 +328,6 @@ export default function RegisterPage() {
                   />
                   {/* Institute */}
                   <FormField
-                    control={form.control}
                     name="institute"
                     render={({ field }) => (
                       <FormItem>
@@ -348,12 +335,12 @@ export default function RegisterPage() {
                           label="ইনস্টিটিউট"
                           subLabel="আপনি যে ইনস্টিটিউটে অধ্যয়ন করছেন, অনুগ্রহ করে সেই ইনস্টিটিউটের নাম সঠিকভাবে প্রদান করুন।"
                           isRequired={true}
-                          htmlFor="discord-username"
+                          htmlFor="institute"
                         />
                         <FormControl>
                           <div className="relative">
                             <Input
-                              id="discord-username"
+                              id="institute"
                               placeholder="Dhaka Polytechnic Institute"
                               {...field}
                             />
@@ -363,9 +350,54 @@ export default function RegisterPage() {
                       </FormItem>
                     )}
                   />
-                  {/* Institute */}
+
+                  {/* Department */}
                   <FormField
-                    control={form.control}
+                    name="department"
+                    render={({ field }) => (
+                      <FormItem>
+                        <CustomLabel
+                          label="ডিপার্টমেন্ট "
+                          subLabel="অনুগ্রহ করে আপনার ডিপার্টমেন্ট সঠিকভাবে উল্লেখ করুন, কারণ এটি গুরুত্বপূর্ণ তথ্য হিসেবে ব্যবহৃত হবে।"
+                          isRequired={true}
+                          htmlFor="departnemnt"
+                        />
+                        <FormControl>
+                          <Select
+                            defaultValue={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="ডিপার্টমেন্ট সিলেক্ট করুন" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="64-ct">
+                                  64 Civil Technology
+                                </SelectItem>
+                                <SelectItem value="67-et">
+                                  67 Electrical Technology
+                                </SelectItem>
+                                <SelectItem value="68-elt">
+                                  68 Electronics Technology
+                                </SelectItem>
+                                <SelectItem value="70-mt">
+                                  70 Mechanical Technology
+                                </SelectItem>
+                                <SelectItem value="85-cst">
+                                  85 Computer Science and Technology
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Session */}
+                  <FormField
                     name="session"
                     render={({ field }) => (
                       <FormItem>
@@ -391,7 +423,6 @@ export default function RegisterPage() {
 
                   {/* Discord Username */}
                   <FormField
-                    control={form.control}
                     name="discordUsername"
                     render={({ field }) => (
                       <FormItem>
@@ -415,7 +446,6 @@ export default function RegisterPage() {
                   />
                   {/* Address */}
                   <FormField
-                    control={form.control}
                     name="address"
                     render={({ field }) => (
                       <FormItem>
@@ -439,39 +469,61 @@ export default function RegisterPage() {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    name="agreement"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Label className="flex gap-2">
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                            <div>
+                              আমি নেক্সট পাবলিকেশনের সকল{" "}
+                              <Link className={"link"} href={"/terms"}>
+                                শর্তাবলী
+                              </Link>
+                              ,{" "}
+                              <Link className={"link"} href={"/privacy-policy"}>
+                                গোপনীয়তা নীতি{" "}
+                              </Link>
+                              এবং{" "}
+                              <Link className={"link"} href={"/refund-policy"}>
+                                রিফান্ড পলিসি
+                              </Link>{" "}
+                              যথাযথভাবে মেনে নিচ্ছি।
+                            </div>
+                          </Label>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
-
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              <div className="text-center my-5">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-12 font-medium"
                 >
-                  Forgot password?
-                </Link>
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  ) : (
+                    <>
+                      <UserPlus2Icon className="mr-2 h-5 w-5" />
+                      নিবন্ধন করুন
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-center my-3">
+                  আপনি যদি ইতোমধ্যে নিবন্ধিত হন,{" "}
+                  <Link href="/register" className="transition-colors link">
+                    তবে এখানে লগইন করুন।
+                  </Link>
+                </p>
               </div>
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-12 font-medium"
-              >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                ) : (
-                  <>
-                    <KeyRound className="mr-2 h-5 w-5" />
-                    Sign In
-                  </>
-                )}
-              </Button>
-
-              <p className="text-center">
-                Don't have an account?{" "}
-                <Link href="/register" className="transition-colors">
-                  Create account
-                </Link>
-              </p>
             </form>
           </Form>
         </motion.div>

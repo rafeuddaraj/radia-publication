@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import CustomLabel from "@/components/ui/custom-label";
+import Highlight from "@/components/highlight";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -55,9 +57,11 @@ export default function LoginPage() {
         >
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r bg-clip-text">
-              Welcome Back
+              <Highlight>লগইন</Highlight> করুন
             </h1>
-            <p className="mt-2">Please sign in to access your account</p>
+            <p className="mt-2">
+              আপনার লগইন তথ্য গোপন রাখুন, অন্য কারও সঙ্গে শেয়ার করবেন না।
+            </p>
           </div>
 
           <Form {...form}>
@@ -67,9 +71,19 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <CustomLabel
+                      label="আপনার ইমেইল এড্রেস"
+                      subLabel="যে ইমেইল এড্রেস দিয়ে আপনি নিবন্ধন করেছিলেন।"
+                      htmlFor="email"
+                      isRequired={true}
+                    />
                     <FormControl>
                       <div className="relative">
-                        <Input placeholder="Email Address" {...field} />
+                        <Input
+                          id="email"
+                          placeholder="rafe@uddaraj.com"
+                          {...field}
+                        />
                       </div>
                     </FormControl>
                     <FormMessage className="text-red-400" />
@@ -82,11 +96,17 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
+                    <CustomLabel
+                      label="পাসওয়ার্ড দিন"
+                      subLabel="পাসওয়ার্ডটি অবশ্যই কমপক্ষে ৮ অক্ষরের হতে হবে। এছাড়াও, এতে অন্তত ১টি অক্ষর (লেটার) এবং ১টি সংখ্যা (নাম্বার) থাকতে হবে।"
+                      htmlFor="name"
+                      isRequired={true}
+                    />
                     <FormControl>
                       <div className="relative">
                         <Input
                           type={showPassword ? "text" : "password"}
-                          placeholder="Password"
+                          placeholder="P@ssw0rd1"
                           {...field}
                         />
                         <Button
@@ -112,9 +132,9 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <Link
                   href="/forgot-password"
-                  className="text-sm dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                  className="text-sm link transition-colors"
                 >
-                  Forgot password?
+                  পাসওয়ার্ড ভুলে গেছেন?
                 </Link>
               </div>
 
@@ -128,15 +148,15 @@ export default function LoginPage() {
                 ) : (
                   <>
                     <KeyRound className="mr-2 h-5 w-5" />
-                    Sign In
+                    লগইন করুন
                   </>
                 )}
               </Button>
 
               <p className="text-center">
-                Don't have an account?{" "}
-                <Link href="/register" className="  transition-colors">
-                  Create account
+                অ্যাকাউন্ট নেই?{" "}
+                <Link href="/register" className="transition-colors link ">
+                  নতুন অ্যাকাউন্ট তৈরি করুন।
                 </Link>
               </p>
             </form>
