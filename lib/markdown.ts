@@ -69,6 +69,8 @@ export async function getBooksForSlug(slug: string) {
     const rawMdx = await fs.readFile(contentPath, "utf-8");
     return await parseMdx<BaseMdxFrontmatter>(rawMdx);
   } catch (err) {
+    console.log({ err });
+
     console.log(err);
   }
 }
