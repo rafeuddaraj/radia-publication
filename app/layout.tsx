@@ -20,8 +20,8 @@ const monoFont = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RadiaPublication - Template",
-  metadataBase: new URL("https://RadiaPublication.vercel.app/"),
+  title: "নেক্সট পাবলিকেশন - Template",
+  metadataBase: new URL("https://nextpublication.vercel.app/"),
   description:
     "This comprehensive documentation template, crafted with Next.js and available as open-source, delivers a sleek and responsive design, tailored to meet all your project documentation requirements.",
 };

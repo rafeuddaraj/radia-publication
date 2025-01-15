@@ -10,24 +10,16 @@ import { SheetClose } from "@/components/ui/sheet";
 
 export const NAVLINKS = [
   {
-    title: "My Books",
+    title: "আমার সকল বই",
     href: `/books${page_routes[0].href}`,
   },
   {
-    title: "Blog",
+    title: "ব্লগ",
     href: "/blog",
   },
   {
-    title: "Examples",
-    href: "#",
-  },
-  {
-    title: "Guides",
-    href: "#",
-  },
-  {
-    title: "Community",
-    href: "https://github.com/nisabmohd/Aria-Docs/discussions",
+    title: "কমিউনিটি",
+    href: "https://discord.gg/M7U4w92f",
   },
 ];
 
@@ -88,7 +80,7 @@ export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
       <CommandIcon className="w-6 h-6 text-muted-foreground" strokeWidth={2} />
-      <h2 className="text-md font-bold font-code">RadiaPublication</h2>
+      <h2 className="text-md font-bold font-code">নেক্সট পাবলিকেশন</h2>
     </Link>
   );
 }
