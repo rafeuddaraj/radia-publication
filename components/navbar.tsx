@@ -7,6 +7,8 @@ import Anchor from "./anchor";
 import { SheetLeftbar } from "./leftbar";
 import { page_routes } from "@/lib/routes-config";
 import { SheetClose } from "@/components/ui/sheet";
+import Image from "next/image";
+import { auth } from "@/auth";
 
 export const NAVLINKS = [
   {
@@ -23,7 +25,12 @@ export const NAVLINKS = [
   },
 ];
 
-export function Navbar() {
+export async function Navbar() {
+  const { user } = (await auth()) || {};
+
+  const name = user?.name;
+  const avatarName = `${name?.trim()[0]}${name?.trim()?.split(" ")[1][0]}`;
+
   return (
     <nav className="w-full border-b h-16 sticky top-0 z-50 bg-background">
       <div className="sm:container mx-auto w-[95vw] h-full flex items-center justify-between md:gap-2">
@@ -52,16 +59,42 @@ export function Navbar() {
               >
                 <TwitterIcon className="h-[1.1rem] w-[1.1rem]" />
               </Link>
-              <Link
-                href="/login"
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "icon",
-                })}
-              >
-                <User className="h-[1.1rem] w-[1.1rem]" />
-              </Link>
               <ModeToggle />
+              {user ? (
+                <>
+                  <Link
+                    href="/account"
+                    className={`${buttonVariants({
+                      variant: "ghost",
+                      size: "icon",
+                    })} border-green-600 rounded-[100%] border-2`}
+                  >
+                    {user?.avatar ? (
+                      <Image
+                        src={user.avatar || "/avatar.png"}
+                        alt={user.name || "User Avatar"}
+                        width={24}
+                        height={24}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <div>
+                        <span>{avatarName}</span>
+                      </div>
+                    )}
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "icon",
+                  })}
+                >
+                  <User className="h-[1.1rem] w-[1.1rem]" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

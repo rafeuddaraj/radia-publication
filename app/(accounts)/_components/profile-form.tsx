@@ -29,44 +29,30 @@ import {
 } from "@/components/ui/select";
 
 const formSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters"),
+  name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Invalid phone number"),
-  dateOfBirth: z.string(),
   gender: z.string(),
-  session: z.string(),
+  year: z.string(),
   semester: z.string(),
   role: z.string(),
-  registrationNumber: z.string(),
+  registration: z.string(),
   department: z.string(),
-  instituteName: z.string(),
+  institute: z.string(),
   address: z.string().min(5, "Please enter your full address"),
-  discordId: z.string().min(2, "Invalid Discord ID"),
+  discordUsername: z.string().min(2, "Invalid Discord ID"),
   avatar: z.any().optional(),
   // avatar: z.instanceof(File).optional(),
 });
 
-export function ProfileForm() {
+export function ProfileForm({ userData }) {
   const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  console.log({ userData });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      dateOfBirth: "",
-      gender: "",
-      session: "",
-      semester: "",
-      role: "",
-      registrationNumber: "",
-      department: "",
-      instituteName: "",
-      address: "",
-      discordId: "",
-    },
+    defaultValues: { ...userData?.data },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -103,7 +89,7 @@ export function ProfileForm() {
                     <Avatar className="h-24 w-24">
                       <AvatarImage src={avatarPreview || "/placeholder.svg"} />
                       <AvatarFallback>
-                        {form.getValues("fullName")?.charAt(0) || "U"}
+                        {form.getValues("name")?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -142,7 +128,8 @@ export function ProfileForm() {
           <div className="grid gap-6 sm:grid-cols-2">
             <FormField
               control={form.control}
-              name="fullName"
+              name="name"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -157,6 +144,7 @@ export function ProfileForm() {
             <FormField
               control={form.control}
               name="email"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -171,6 +159,7 @@ export function ProfileForm() {
             <FormField
               control={form.control}
               name="phone"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
@@ -184,26 +173,14 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date of Birth</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="gender"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
                   <Select
                     onValueChange={field.onChange}
+                    disabled
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -224,7 +201,8 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
-              name="session"
+              name="year"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Session</FormLabel>
@@ -252,21 +230,8 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your role" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="registrationNumber"
+              name="registration"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Registration Number</FormLabel>
@@ -284,6 +249,7 @@ export function ProfileForm() {
             <FormField
               control={form.control}
               name="department"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Department</FormLabel>
@@ -297,7 +263,8 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
-              name="instituteName"
+              name="institute"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Institute Name</FormLabel>
@@ -311,6 +278,7 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
+              disabled
               name="address"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
@@ -325,7 +293,8 @@ export function ProfileForm() {
 
             <FormField
               control={form.control}
-              name="discordId"
+              name="discordUsername"
+              disabled={userData}
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
                   <FormLabel>Discord ID</FormLabel>

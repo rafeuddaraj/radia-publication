@@ -15,6 +15,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { signOut } from "next-auth/react";
+import { logout } from "@/actions/client-auth-action";
 
 const sidebarItems = [
   { icon: User, label: "Profile", href: "/account" },
@@ -42,7 +44,7 @@ export function Sidebar() {
       <ScrollArea className="flex-1 py-4">
         <nav
           className={cn(
-            "space-y-4 px-2",
+            "space-y-4 px-2 mb-[100%]",
             isMobile &&
               "flex flex-row space-x-2 space-y-0 px-4 py-2 overflow-x-auto"
           )}
@@ -63,15 +65,19 @@ export function Sidebar() {
             </Link>
           ))}
         </nav>
+        {!isMobile && (
+          <div className="border-t p-4">
+            <Button
+              onClick={async () => await logout()}
+              variant="ghost"
+              className="w-full justify-start mt-2"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Log out
+            </Button>
+          </div>
+        )}
       </ScrollArea>
-      {!isMobile && (
-        <div className="border-t p-4">
-          <Button variant="ghost" className="w-full justify-start mt-2">
-            <LogOut className="mr-2 h-4 w-4" />
-            Log out
-          </Button>
-        </div>
-      )}
     </>
   );
 

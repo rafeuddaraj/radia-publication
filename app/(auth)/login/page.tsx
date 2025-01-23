@@ -1,50 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Eye, EyeOff, Loader2, KeyRound } from "lucide-react";
-import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import CustomLabel from "@/components/ui/custom-label";
 import Highlight from "@/components/highlight";
-
-const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+import { toast } from "sonner";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(values);
-    setIsLoading(false);
-  }
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signIn("google", { callbackUrl: "/books" });
+      if (result?.error) {
+        toast.error("লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+      }
+    } catch {
+      toast.error("লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+    }
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -60,107 +33,45 @@ export default function LoginPage() {
               <Highlight>লগইন</Highlight> করুন
             </h1>
             <p className="mt-2">
-              আপনার লগইন তথ্য গোপন রাখুন, অন্য কারও সঙ্গে শেয়ার করবেন না।
+              আপনার Google অ্যাকাউন্ট ব্যবহার করে লগইন করুন।
             </p>
           </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomLabel
-                      label="আপনার ইমেইল এড্রেস"
-                      subLabel="যে ইমেইল এড্রেস দিয়ে আপনি নিবন্ধন করেছিলেন।"
-                      htmlFor="email"
-                      isRequired={true}
-                    />
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          id="email"
-                          placeholder="rafe@uddaraj.com"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-red-400" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <CustomLabel
-                      label="পাসওয়ার্ড দিন"
-                      subLabel="পাসওয়ার্ডটি অবশ্যই কমপক্ষে ৮ অক্ষরের হতে হবে। এছাড়াও, এতে অন্তত ১টি অক্ষর (লেটার) এবং ১টি সংখ্যা (নাম্বার) থাকতে হবে।"
-                      htmlFor="name"
-                      isRequired={true}
-                    />
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          type={showPassword ? "text" : "password"}
-                          placeholder="P@ssw0rd1"
-                          {...field}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:text-blue-400/50 dark:hover:text-blue-400"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-5 w-5" />
-                          ) : (
-                            <Eye className="h-5 w-5" />
-                          )}
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-red-400" />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm link transition-colors"
-                >
-                  পাসওয়ার্ড ভুলে গেছেন?
-                </Link>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full h-12 font-medium"
+          <Button
+            onClick={handleGoogleLogin}
+            className="w-full h-12 font-medium flex items-center justify-center"
+            variant={"outline"}
+          >
+            <>
+              {/*?xml version="1.0" encoding="utf-8"?*/}
+              {/* Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools */}
+              <svg
+                width="20px"
+                height="20px"
+                viewBox="-3 0 262 262"
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid"
               >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                ) : (
-                  <>
-                    <KeyRound className="mr-2 h-5 w-5" />
-                    লগইন করুন
-                  </>
-                )}
-              </Button>
-
-              <p className="text-center">
-                অ্যাকাউন্ট নেই?{" "}
-                <Link href="/register" className="transition-colors link ">
-                  নতুন অ্যাকাউন্ট তৈরি করুন।
-                </Link>
-              </p>
-            </form>
-          </Form>
+                <path
+                  d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
+                  fill="#34A853"
+                />
+                <path
+                  d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+                  fill="#EB4335"
+                />
+              </svg>
+            </>
+            Google দিয়ে লগইন করুন
+          </Button>
         </motion.div>
       </div>
 
