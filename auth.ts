@@ -4,11 +4,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { authConfig } from "./auth.config";
 import { db } from "./lib/prisma";
 import jwt from "jsonwebtoken";
-interface ExtendedUser extends NextAuthUser {
+export interface ExtendedUser extends NextAuthUser {
   accessToken?: string;
   refreshToken?: string;
 }
-
 
 export const {
   auth,
@@ -73,7 +72,7 @@ export const {
         );
         const refreshToken = await jwt.sign(
           { email, id, name, role },
-          process.env.JWT_SECRET_KEY,
+          process.env.JWT_SECRET_KEY as string,
           { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED }
         );
         await db.session.update({
@@ -90,11 +89,71 @@ export const {
         return { ...token, session };
       }
       if (user) {
-        (user as ExtendedUser).accessToken = token.accessToken as string | undefined;
-        (user as ExtendedUser).refreshToken = token.refreshToken as string | undefined;
+        (user as ExtendedUser).accessToken = token.accessToken as
+          | string
+          | undefined;
+        (user as ExtendedUser).refreshToken = token.refreshToken as
+          | string
+          | undefined;
 
         return { ...user };
       }
+
+      // Checking Access Token and Refresh Token
+
+      if (token.accessToken && token.refreshToken) {
+        try {
+          const currentSession = await db.session.findFirst({
+            where: {
+              userId: token.id as string,
+              accessToken: token.accessToken,
+              refreshToken: token.refreshToken,
+            },
+          });
+          if (currentSession) {
+            try {
+              await jwt.verify(
+                token.accessToken as string,
+                process.env.JWT_SECRET_KEY as string
+              );
+            } catch {
+              const decodedRefreshToken = await jwt.verify(
+                token.refreshToken as string,
+                process.env.JWT_SECRET_KEY as string
+              );
+
+              // Generating Access Token
+
+              const newAccessToken = await jwt.sign(
+                decodedRefreshToken,
+                process.env.JWT_SECRET_KEY as string,
+                { expiresIn: process.env.JWT_TOKEN_EXPIRED }
+              );
+              const newRefreshToken = await jwt.sign(
+                decodedRefreshToken,
+                process.env.JWT_SECRET_KEY as string,
+                { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED }
+              );
+              await db.session.update({
+                where: { userId: token.id as string },
+                data: {
+                  accessToken: newAccessToken,
+                  refreshToken: newRefreshToken,
+                },
+              });
+              token.accessToken = newAccessToken;
+              token.refreshToken = newRefreshToken;
+            }
+          } else {
+            return null
+          }
+        } catch (err) {
+          console.log(err);
+
+          return null;
+        }
+      }
+
       const exportToken = {
         name: token.name,
         email: token.email,
@@ -104,26 +163,6 @@ export const {
         id: token.id,
         image: token.image,
       };
-
-      // Checking Access Token and Refresh Token 
-
-     if(token.accessToken && token.refreshToken){
-      try {
-        const currentSession = await db.session.findFirst({
-          where: {
-            userId: token.id as string,
-            accessToken: token.accessToken,
-            refreshToken: token.refreshToken,
-          },
-        });
-        if(!currentSession){
-          throw new Error("Invalid Token")
-        }
-        
-      }catch{
-        return null
-      }
-     }
       return exportToken;
     },
     async session({ session, token }) {

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   User,
-  Lock,
   CreditCard,
   BookOpen,
   History,
@@ -15,12 +14,10 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { signOut } from "next-auth/react";
-import { logout } from "@/actions/client-auth-action";
+import { logout } from "@/actions/auth";
 
 const sidebarItems = [
   { icon: User, label: "Profile", href: "/account" },
-  { icon: Lock, label: "Password", href: "/password" },
   { icon: CreditCard, label: "Transactions", href: "/transactions" },
   { icon: BookOpen, label: "My Books", href: "/my-books" },
   { icon: History, label: "Login History", href: "/login-history" },

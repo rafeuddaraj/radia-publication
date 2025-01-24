@@ -1,4 +1,6 @@
+import ComingSoon from "@/components/common/coming-soon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { COMING_SOON } from "@/config";
 import { Author, BlogMdxFrontmatter, getAllBlogs } from "@/lib/markdown";
 import { formatDate2, stringToDate } from "@/lib/utils";
 import { Metadata } from "next";
@@ -23,11 +25,16 @@ export default async function BlogIndexPage() {
           All the latest blogs and news, straight from the team.
         </p>
       </div>
-      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-8 gap-4 mb-5">
-        {blogs.map((blog) => (
-          <BlogCard {...blog} slug={blog.slug} key={blog.slug} />
-        ))}
-      </div>
+
+      {COMING_SOON ? (
+        <ComingSoon />
+      ) : (
+        <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-8 gap-4 mb-5">
+          {blogs.map((blog) => (
+            <BlogCard {...blog} slug={blog.slug} key={blog.slug} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

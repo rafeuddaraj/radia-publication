@@ -67,15 +67,15 @@ export async function Navbar() {
                     className={`${buttonVariants({
                       variant: "ghost",
                       size: "icon",
-                    })} border-green-600 rounded-[100%] border-2`}
+                    })} border-green-600 border-2 !rounded-[100%]`}
                   >
-                    {user?.avatar ? (
+                    {user?.image ? (
                       <Image
-                        src={user.avatar || "/avatar.png"}
+                        src={user.image || "/avatar.png"}
                         alt={user.name || "User Avatar"}
                         width={24}
                         height={24}
-                        className="rounded-full"
+                        className="rounded-full w-full"
                       />
                     ) : (
                       <div>

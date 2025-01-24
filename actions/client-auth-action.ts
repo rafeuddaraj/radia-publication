@@ -1,7 +1,4 @@
 import { PUBLIC_BASE_API_URL } from "@/config";
-import { signOut } from "next-auth/react";
-import { redirect } from "next/navigation";
-
 type LoginData = {
   email: string;
   password: string;
@@ -81,9 +78,4 @@ export const register = async (data: RegisterData): Promise<ApiResponse> => {
     body: JSON.stringify(data),
   });
   return await res.json();
-};
-
-export const logout = async () => {
-  await signOut({ redirect: false });
-  redirect("/login");
 };

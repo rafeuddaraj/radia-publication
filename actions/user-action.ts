@@ -1,16 +1,37 @@
 "use server";
-import { BASE_API_URL } from "@/config";
-import { wrapperFetch } from "./wrapper-fetch";
 
-const USER_API_ENDPOINT = `${BASE_API_URL}/user`;
+import { UserData } from "@/app/(accounts)/_components/profile-form";
+import { fetchWithAuth } from "@/utils/fetchWithAuth";
+import { revalidateTag } from "next/cache";
 
 export const getUserData = async (userId: string) => {
-  console.log(`${USER_API_ENDPOINT}/${userId}`);
-
   try {
-    const userData = await wrapperFetch(`${USER_API_ENDPOINT}/${userId}`);
+    const userData = await fetchWithAuth(`/user/${userId}`, {
+      method: "GET",
+      next: { tags: ["single-user"] },
+    });
     return userData;
   } catch {
+    return null;
+  }
+};
+export const updateUserData = async (data: UserData["data"]): Promise<any> => {
+  try {
+    const res = await fetchWithAuth(`/user/update`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+    const respData = await res.json();
+    if (!respData?.error) {
+      revalidateTag("single-user");
+      return JSON.stringify(respData?.data);
+    }
+    console.log({ respData });
+
+    throw Error("Resp not found");
+  } catch (err) {
+    console.log({ err });
+
     return null;
   }
 };

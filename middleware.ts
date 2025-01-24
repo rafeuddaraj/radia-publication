@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { ADMIN_ROUTES, LOGIN, PUBLIC_ROUTES, ROOT } from "./lib/routes";
+import { DASHBOARD, LOGIN, PUBLIC_ROUTES, ROOT } from "./lib/routes";
 import { NextRequest, NextResponse } from "next/server";
 import { authConfig } from "./auth.config";
 import { getToken } from "next-auth/jwt";
@@ -16,33 +16,27 @@ export default nextAuth(async (req: NextRequest) => {
   // Check if the session exists
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const isAuthenticated = !!token;
-  const role = token?.role; 
+  const role = token?.role as string;
 
   const isPublicRoute =
-    PUBLIC_ROUTES.find((route) => nextUrl.pathname.startsWith(route)) ||
-    nextUrl.pathname === ROOT;
+    PUBLIC_ROUTES.find((route) => nextUrl.pathname.includes(route)) ||
+    ROOT === nextUrl.pathname;
 
   if (isAuthenticated && nextUrl.pathname === LOGIN) {
-    return NextResponse.redirect(new URL(ROOT, nextUrl));
+    return NextResponse.redirect(
+      new URL(role === "admin" ? `/dashboard` : "/", nextUrl)
+    );
   }
 
-  const isAdminRoute =
-    ADMIN_ROUTES.find((route) => nextUrl.pathname.startsWith(route)) ||
-    nextUrl.pathname === ROOT;
+  if (nextUrl.pathname.startsWith(DASHBOARD) && role !== "admin") {
+    return NextResponse.redirect(
+      new URL(isAuthenticated ? ROOT : LOGIN, nextUrl)
+    );
+  }
 
-  // Admin user access
-  if (isAuthenticated && role === "admin" && isAdminRoute) {
-    return NextResponse.next();
-  }
-  // Reader User access
-  else if (isAuthenticated && role === "user" && isPublicRoute) {
-    return NextResponse.next();
-  }
-  // Redirect to login if not authenticated
-  if (!isAuthenticated && !isPublicRoute) {
+  if (!isPublicRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL(LOGIN, nextUrl));
   }
-  return NextResponse.next();
 });
 
 export const config = {

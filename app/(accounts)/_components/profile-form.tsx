@@ -27,43 +27,100 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { updateUserData } from "@/actions/user-action";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Invalid phone number"),
-  gender: z.string(),
-  year: z.string(),
-  semester: z.string(),
-  role: z.string(),
-  registration: z.string(),
-  department: z.string(),
-  institute: z.string(),
-  address: z.string().min(5, "Please enter your full address"),
-  discordUsername: z.string().min(2, "Invalid Discord ID"),
-  avatar: z.any().optional(),
-  // avatar: z.instanceof(File).optional(),
+  phone: z.string().min(10, "Invalid phone number").default(""),
+  gender: z.string().default(""),
+  year: z.string().default(""),
+  semester: z.string().default(""),
+  role: z.string().default(""),
+  registration: z.string().default(""),
+  department: z.string().default(""),
+  institute: z.string().default(""),
+  address: z.string().min(5, "Please enter your full address").default(""),
+  discordUsername: z.string().min(2, "Invalid Discord ID").default(""),
+  image: z.any().optional().default(""),
 });
 
-export function ProfileForm({ userData }) {
+export interface UserData {
+  data: {
+    name: string;
+    email: string;
+    phone: string;
+    gender: string;
+    year: string;
+    semester: string;
+    role: string;
+    registration: string;
+    department: string;
+    institute: string;
+    address: string;
+    discordUsername: string;
+    image?: any;
+  };
+}
+
+export function ProfileForm({ userData }: { userData: UserData }) {
+  const data = Object.fromEntries(
+    Object.entries(userData.data).map(([key, value]) => [key, value || ""])
+  ) as UserData["data"];
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  console.log({ userData });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { ...userData?.data },
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      gender: "",
+      year: "",
+      semester: "",
+      role: "",
+      registration: "",
+      department: "",
+      institute: "",
+      address: "",
+      discordUsername: "",
+      image: "",
+      ...data,
+    },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log(values);
-      toast.success("Profile updated successfully!");
-    } catch {
-      toast.error("Something went wrong");
+      const newData = Object.keys(data).reduce(
+        (acc, key) => {
+          const typedKey = key as keyof typeof data;
+          acc[typedKey] = data[typedKey]
+            ? data[typedKey]
+            : values[typedKey] ?? userData.data[typedKey];
+          return acc;
+        },
+        { ...values }
+      );
+      newData["semester"] = values?.semester;
+      console.log({ newData });
+
+      const resp = await updateUserData(newData);
+
+      if (resp) {
+        router.refresh();
+        toast.success("সফল ভাবে আপনার প্রফাইলটি আপডেট করা হয়েছে।");
+        return;
+      }
+      throw Error("Update failure");
+    } catch (err) {
+      console.log({ err });
+
+      toast.error("এই মহুর্তে প্রফাইলটি আপডেট করা সম্ভব হচ্ছে না।");
     } finally {
       setIsLoading(false);
     }
@@ -80,24 +137,26 @@ export function ProfileForm({ userData }) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="avatar"
+            name="image"
             render={({ field: { onChange } }) => (
               <FormItem>
                 <FormLabel>Profile Picture</FormLabel>
                 <FormControl>
                   <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                     <Avatar className="h-24 w-24">
-                      <AvatarImage src={avatarPreview || "/placeholder.svg"} />
+                      <AvatarImage
+                        src={avatarPreview || data?.image || "/placeholder.svg"}
+                      />
                       <AvatarFallback>
                         {form.getValues("name")?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
+                    {/* <div>
                       <Input
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        id="avatar"
+                        id="image"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) {
@@ -111,13 +170,13 @@ export function ProfileForm({ userData }) {
                         }}
                       />
                       <label
-                        htmlFor="avatar"
+                        htmlFor="image"
                         className="cursor-pointer inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
                       >
                         <Upload className="w-4 h-4 mr-2" />
                         Choose File
                       </label>
-                    </div>
+                    </div> */}
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -159,7 +218,7 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="phone"
-              disabled
+              disabled={!!data.phone}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
@@ -174,13 +233,12 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="gender"
-              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    disabled
+                    disabled={!!data.gender}
                     defaultValue={field.value}
                   >
                     <FormControl>
@@ -202,7 +260,7 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="year"
-              disabled
+              disabled={!!data.year}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Session</FormLabel>
@@ -231,7 +289,7 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="registration"
-              disabled
+              disabled={!!data.registration}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Registration Number</FormLabel>
@@ -249,7 +307,7 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="department"
-              disabled
+              disabled={!!data.department}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Department</FormLabel>
@@ -264,7 +322,7 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="institute"
-              disabled
+              disabled={!!data.institute}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Institute Name</FormLabel>
@@ -278,7 +336,7 @@ export function ProfileForm({ userData }) {
 
             <FormField
               control={form.control}
-              disabled
+              disabled={!!data.address}
               name="address"
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
@@ -294,7 +352,7 @@ export function ProfileForm({ userData }) {
             <FormField
               control={form.control}
               name="discordUsername"
-              disabled={userData}
+              disabled={!!data.discordUsername}
               render={({ field }) => (
                 <FormItem className="sm:col-span-2">
                   <FormLabel>Discord ID</FormLabel>
@@ -313,7 +371,11 @@ export function ProfileForm({ userData }) {
           <div className="flex justify-end">
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={
+                isLoading ||
+                !form.formState.isDirty ||
+                form.formState.isSubmitted
+              }
               className="w-full sm:w-auto"
             >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
