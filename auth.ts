@@ -67,7 +67,7 @@ export const {
         };
         const accessToken = await jwt.sign(
           { email, id, name, role },
-          process.env.JWT_SECRET_KEY,
+          process.env.JWT_SECRET_KEY as string,
           { expiresIn: process.env.JWT_TOKEN_EXPIRED }
         );
         const refreshToken = await jwt.sign(
@@ -117,20 +117,21 @@ export const {
                 process.env.JWT_SECRET_KEY as string
               );
             } catch {
-              const decodedRefreshToken = await jwt.verify(
+              const decoded = await jwt.verify(
                 token.refreshToken as string,
                 process.env.JWT_SECRET_KEY as string
-              );
+              ) as jwt.JwtPayload;
+              const { email, id, name, role } = decoded;
 
               // Generating Access Token
 
               const newAccessToken = await jwt.sign(
-                decodedRefreshToken,
+                { email, id, name, role },
                 process.env.JWT_SECRET_KEY as string,
                 { expiresIn: process.env.JWT_TOKEN_EXPIRED }
               );
               const newRefreshToken = await jwt.sign(
-                decodedRefreshToken,
+                { email, id, name, role },
                 process.env.JWT_SECRET_KEY as string,
                 { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED }
               );

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { updateUserData } from "@/actions/user-action";
 import { useRouter } from "next/navigation";
+import useSocket from "@/hooks/useSocket";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -65,13 +66,16 @@ export interface UserData {
 }
 
 export function ProfileForm({ userData }: { userData: UserData }) {
+  const socket = useSocket();
+  console.log({ socket });
+
   const data = Object.fromEntries(
     Object.entries(userData.data).map(([key, value]) => [key, value || ""])
   ) as UserData["data"];
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarPreview] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,9 +93,12 @@ export function ProfileForm({ userData }: { userData: UserData }) {
       address: "",
       discordUsername: "",
       image: "",
-      ...data,
     },
   });
+
+  useEffect(() => {
+    form.reset(data);
+  }, [data, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -138,7 +145,7 @@ export function ProfileForm({ userData }: { userData: UserData }) {
           <FormField
             control={form.control}
             name="image"
-            render={({ field: { onChange } }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Profile Picture</FormLabel>
                 <FormControl>
