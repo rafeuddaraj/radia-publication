@@ -40,12 +40,12 @@ export const {
         const accessToken = await jwt.sign(
           { email, id, name, role },
           process.env.JWT_SECRET_KEY as string,
-          { expiresIn: process.env.JWT_TOKEN_EXPIRED }
+          { expiresIn: process.env.JWT_TOKEN_EXPIRED || "7d" }
         );
         const refreshToken = await jwt.sign(
           { email, id, name, role },
           process.env.JWT_SECRET_KEY as string,
-          { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED }
+          { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED || "14d" }
         );
         await db.session.create({
           data: {
@@ -68,12 +68,12 @@ export const {
         const accessToken = await jwt.sign(
           { email, id, name, role },
           process.env.JWT_SECRET_KEY as string,
-          { expiresIn: process.env.JWT_TOKEN_EXPIRED }
+          { expiresIn: process.env.JWT_TOKEN_EXPIRED || "7d" }
         );
         const refreshToken = await jwt.sign(
           { email, id, name, role },
           process.env.JWT_SECRET_KEY as string,
-          { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED }
+          { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED || "14d" }
         );
         await db.session.update({
           where: { userId: id },
@@ -117,10 +117,10 @@ export const {
                 process.env.JWT_SECRET_KEY as string
               );
             } catch {
-              const decoded = await jwt.verify(
+              const decoded = (await jwt.verify(
                 token.refreshToken as string,
                 process.env.JWT_SECRET_KEY as string
-              ) as jwt.JwtPayload;
+              )) as jwt.JwtPayload;
               const { email, id, name, role } = decoded;
 
               // Generating Access Token
@@ -128,12 +128,12 @@ export const {
               const newAccessToken = await jwt.sign(
                 { email, id, name, role },
                 process.env.JWT_SECRET_KEY as string,
-                { expiresIn: process.env.JWT_TOKEN_EXPIRED }
+                { expiresIn: process.env.JWT_TOKEN_EXPIRED || "7d" }
               );
               const newRefreshToken = await jwt.sign(
                 { email, id, name, role },
                 process.env.JWT_SECRET_KEY as string,
-                { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED }
+                { expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRED || "7d" }
               );
               await db.session.update({
                 where: { userId: token.id as string },
@@ -146,11 +146,9 @@ export const {
               token.refreshToken = newRefreshToken;
             }
           } else {
-            return null
+            return null;
           }
-        } catch (err) {
-          console.log(err);
-
+        } catch {
           return null;
         }
       }
