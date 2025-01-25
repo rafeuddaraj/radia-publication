@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/select";
 import { updateUserData } from "@/actions/user-action";
 import { useRouter } from "next/navigation";
-import useSocket from "@/hooks/useSocket";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -66,16 +65,14 @@ export interface UserData {
 }
 
 export function ProfileForm({ userData }: { userData: UserData }) {
-  const socket = useSocket();
-  console.log({ socket });
-
   const data = Object.fromEntries(
     Object.entries(userData.data).map(([key, value]) => [key, value || ""])
-  ) as UserData["data"];
+  ) as any;
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview] = useState<string | null>(null);
+  const UData: any = userData;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,25 +90,23 @@ export function ProfileForm({ userData }: { userData: UserData }) {
       address: "",
       discordUsername: "",
       image: "",
+      ...data,
     },
   });
-
-  useEffect(() => {
-    form.reset(data);
-  }, [data, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      const vData: any = { ...values };
       const newData = Object.keys(data).reduce(
         (acc, key) => {
-          const typedKey = key as keyof typeof data;
+          const typedKey = key;
           acc[typedKey] = data[typedKey]
             ? data[typedKey]
-            : values[typedKey] ?? userData.data[typedKey];
+            : vData[typedKey] ?? UData.data[typedKey];
           return acc;
         },
-        { ...values }
+        { ...vData }
       );
       newData["semester"] = values?.semester;
       console.log({ newData });
