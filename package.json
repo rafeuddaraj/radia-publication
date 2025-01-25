@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "npx prisma generate && npx prisma db push && start -p 8101",
+    "build": "npx prisma generate && npx prisma db push && next build",
+    "start": "next start -p 8101",
     "push": "git add . && git commit -m \"book added\" && git push",
     "pull": "git pull",
     "start-prod": "npm run build && npm run start",
