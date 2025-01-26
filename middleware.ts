@@ -19,7 +19,7 @@ export default nextAuth(async (req: NextRequest) => {
   const role = token?.role as string;
 
   const isPublicRoute =
-    PUBLIC_ROUTES.find((route) => nextUrl.pathname.includes(route)) ||
+    PUBLIC_ROUTES.find((route) => nextUrl.pathname.startsWith(route)) ||
     ROOT === nextUrl.pathname;
 
   if (isAuthenticated && nextUrl.pathname === LOGIN) {
@@ -28,11 +28,11 @@ export default nextAuth(async (req: NextRequest) => {
     );
   }
 
-  if (nextUrl.pathname.startsWith(DASHBOARD) && role !== "admin") {
-    return NextResponse.redirect(
-      new URL(isAuthenticated ? ROOT : LOGIN, nextUrl)
-    );
-  }
+  // if (nextUrl.pathname.startsWith(DASHBOARD) && role !== "admin") {
+  //   return NextResponse.redirect(
+  //     new URL(isAuthenticated ? ROOT : LOGIN, nextUrl)
+  //   );
+  // }
 
   if (!isPublicRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL(LOGIN, nextUrl));
